@@ -13,7 +13,7 @@
 
 import { IDENTITY, Matrix } from "./matrix";
 
-class Transformable extends Matrix {
+export class Transformable extends Matrix {
   constructor() {
     super();
   }
