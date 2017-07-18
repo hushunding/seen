@@ -10,31 +10,17 @@
 // interpolated values. Instead of computing the difference at each animation
 // step, you can compute the global interpolated value for that time step and
 // apply that value directly to a matrix (once it is reset).
-namespace seen
-{
-class Transformable
-{
-  baked: any;
-  m: Matrix;
-  constructor()
-  {
-    this.m = new Matrix()
-    this.baked = IDENTITY
 
-    // We create shims for all of the matrix transformation methods so they
-    // have the same interface.
-    for(method of ['scale', 'translate', 'rotx', 'roty', 'rotz', 'matrix', 'reset', 'bake'])
-      {
-        this.m[method].call(this.m, ...arguments)
-      }
-      then do (method) =>
-    
+import { IDENTITY, Matrix } from "./matrix";
+
+class Transformable extends Matrix {
+  constructor() {
+    super();
   }
 
   // Apply a transformation from the supplied `Matrix`. see `Matrix.multiply`
-  transform: (m) ->
-    this.m.multiply(m)
-    return this
-    }
+  public transform(m: Matrix) {
+    this.multiply(m);
+    return this;
+  }
 }
-
