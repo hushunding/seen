@@ -11,15 +11,17 @@
 import { Colors } from "./color";
 import { P } from "./Point";
 import { Transformable } from './transformable';
+import { Shape } from './surface';
+import { Light, Lights } from "./light";
 
 type ChildType = Shape | Model | Light;
-class Model extends Transformable {
+export class Model extends Transformable {
   public lights: Light[];
-  public children: Shape | Model[];
+  public children: Array<Shape | Model>;
   public constructor() {
-    super()
-    this.children = []
-    this.lights = []
+    super();
+    this.children = [];
+    this.lights = [];
   }
   // Add a `Shape`, `Light`, and other `Model` as a child of this `Model`
   // Any number of children can by supplied as arguments.
@@ -40,12 +42,12 @@ class Model extends Transformable {
     let i = -1;
     for (const child of childs) {
       // tslint:disable-next-line:no-conditional-assignment
-      while ((i = this.children.indexOf(child)) >= 0) {
+      while ((i = this.children.indexOf(child as Shape | Model)) >= 0) {
 
         this.children.splice(i, 1);
       }
       // tslint:disable-next-line:no-conditional-assignment
-      while ((i = this.lights.indexOf(child)) >= 0) {
+      while ((i = this.lights.indexOf(child as Light)) >= 0) {
         this.lights.splice(i, 1);
       }
     }
@@ -75,10 +77,10 @@ class Model extends Transformable {
   // transform as well as the list of light models that apply to that shape.
   // tslint:disable-next-line:ban-types
   public eachRenderable(lightFn: Function, shapeFn: Function) {
-    this._eachRenderable(lightFn, shapeFn, [], this.m);
+    this._eachRenderable(lightFn, shapeFn, [], this);
   }
   // tslint:disable-next-line:ban-types
-  public _eachRenderable(lightFn: Function, shapeFn: Function, lightModels, transform) {
+  public _eachRenderable(lightFn: Function, shapeFn: Function, lightModels: Light[], transform: Transformable) {
     if (this.lights.length > 0) {
       lightModels = lightModels.slice();
     }
@@ -86,14 +88,14 @@ class Model extends Transformable {
       if (!light.enabled) {
         continue;
       }
-      lightModels.push(lightFn.call(this, light, light.m.copy().multiply(transform)));
+      lightModels.push(lightFn.call(this, light, light.copy().transform(transform)));
     }
     for (const child of this.children) {
       if (child instanceof Shape) {
-        shapeFn.call(this, child, lightModels, child.m.copy().multiply(transform));
+        shapeFn.call(this, child, lightModels, child.copy().transform(transform));
       }
       if (child instanceof Model) {
-        child._eachRenderable(lightFn, shapeFn, lightModels, child.m.copy().multiply(transform));
+        child._eachRenderable(lightFn, shapeFn, lightModels, child.copy().transform(transform));
       }
     }
   }
@@ -101,7 +103,7 @@ class Model extends Transformable {
 export let Models = {
   // The default model contains standard Hollywood-style 3-part lighting
   default: () => {
-    let model = new Model();
+    const model = new Model();
 
     // Key light
     model.add (Lights.directional({
@@ -119,5 +121,5 @@ export let Models = {
     intensity: 0.0015}));
 
     return model;
-  }
+  },
 };

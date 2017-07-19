@@ -8,7 +8,13 @@
           "object-literal-sort-keys": false,
           "no-bitwise":false,
           "quotemark":[],
-          "max-classes-per-file":[]
+          "max-classes-per-file":[],
+          "ordered-imports":false,
+          "member-ordering":[],
+          "max-line-length":[
+              
+          ]
+
     },
     "rulesDirectory": []
 }

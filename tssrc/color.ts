@@ -91,11 +91,11 @@ export let Colors = {
 
     if (hex.charAt(0) === '#') {
       hex = hex.substring(1);
-      return new Color(
+    }
+    return new Color(
         parseInt(hex.substring(0, 2), 16),
         parseInt(hex.substring(2, 4), 16),
         parseInt(hex.substring(4, 6), 16));
-    }
   },
   // Creates a new `Color` using the supplied hue, saturation, and lightness
   // (HSL) values.
