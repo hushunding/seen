@@ -13,8 +13,8 @@
           "member-ordering":[],
           "max-line-length":[
               
-          ]
-
+          ],
+          "variable-name":[false]
     },
     "rulesDirectory": []
 }

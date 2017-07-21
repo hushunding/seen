@@ -46,7 +46,7 @@ export abstract class Shader {
   // `lights` is an object containing the ambient, point, and directional light sources.
   // `renderModel` is an instance of `RenderModel` and contains the transformed and projected surface data.
   // `material` is an instance of `Material` and contains the color and other attributes for determining how light reflects off the surface.
-  abstract protected shade(lights: Light[], renderModel: RenderModel, material: Material): Color; // Override this
+ public abstract shade(lights: Light[], renderModel: RenderModel, material: Material): Color; // Override this
 }
 // The `Phong` shader implements the Phong shading model with a diffuse,
 // specular, and ambient term.

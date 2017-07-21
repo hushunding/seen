@@ -26,11 +26,11 @@ export class Surface {
     // with the `renderModel` cache.
     this.id = 's' + Util.uniqueId();
   }
-  public fill(fill: Color) {
+  public fill(fill: Material | Color) {
     this.fillMaterial = Material.create(fill);
     return this;
   }
-  public stroke(stroke: Color) {
+  public stroke(stroke: Material | Color) {
     this.strokeMaterial = Material.create(stroke);
     return this;
   }
@@ -49,12 +49,12 @@ export class Shape extends Transformable {
     return this;
   }
   // Apply the supplied fill `Material` to each surface
-  public fill(fill: Color) {
+  public fill(fill: Material | Color ) {
     this.eachSurface((s: Surface) => s.fill(fill));
     return this;
   }
   // Apply the supplied stroke `Material` to each surface
-  public stroke(stroke: Color) {
+  public stroke(stroke: Material | Color) {
     this.eachSurface((s: Surface) => s.stroke(stroke));
     return this;
   }

@@ -60,17 +60,17 @@ export class Transformable {
     return this;
   }
   // Apply a rotation about the X axis. `Theta` is measured in Radians
-  public rotx(theta) {
+  public rotx(theta: number) {
     this.m.rotx(theta);
     return this;
   }
   // Apply a rotation about the Y axis. `Theta` is measured in Radians
-  public roty(theta) {
+  public roty(theta: number) {
     this.m.roty(theta);
     return this;
   }
   // Apply a rotation about the Z axis. `Theta` is measured in Radians
-  public rotz(theta) {
+  public rotz(theta: number) {
     this.m.rotz(theta);
     return this;
   }

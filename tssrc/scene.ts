@@ -84,7 +84,7 @@ export class Scene {
       .multiply(this.camera.projection);
     const viewport = this.viewport.postscale;
 
-    const renderModels = [];
+    const renderModels = any[];
     this.model.eachRenderable(
       (light: Light, transform: Transformable) => {
         // Compute light model data.
@@ -96,19 +96,19 @@ export class Scene {
           const renderModel = this._renderSurface(surface, transform, projection, viewport);
 
           // Test projected normal's z-coordinate for culling (if enabled).
-          if (!this.cullBackfaces || !surface.cullBackfaces || renderModel.projected.normal.z < 0) and renderModel.inFrustrum
-          // Render fill and stroke using material and shader.
-          renderModel.fill = surface.fillMaterial.render(lights, this.shader, renderModel.transformed)
-          renderModel.stroke = surface.strokeMaterial.render(lights, this.shader, renderModel.transformed)
+          if ((!this.cullBackfaces || !surface.cullBackfaces || renderModel.projected.normal.z < 0) && renderModel.inFrustrum) {
+            // Render fill and stroke using material and shader.
+            renderModel.fill = surface.fillMaterial.render(lights, this.shader, renderModel.transformed);
+            renderModel.stroke = surface.strokeMaterial.render(lights, this.shader, renderModel.transformed);
 
-          // Round coordinates (if enabled)
-          if (!this.fractionalPoints) {
-            for (const p of renderModel.projected.points) {
-              p.round();
+            // Round coordinates (if enabled)
+            if (!this.fractionalPoints) {
+              for (const p of renderModel.projected.points) {
+                p.round();
+              }
             }
+            renderModels.push(renderModel);
           }
-
-          renderModels.push(renderModel);
         }
       });
 

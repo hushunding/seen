@@ -4,6 +4,8 @@
 
 // `Material` objects hold the attributes that desribe the color and finish of a surface.
 import { Color, Colors } from "./color";
+import { Shader } from "./shaders";
+import { Light } from "./light";
 
 export class Material {
   public shader: Shader;
@@ -49,7 +51,13 @@ export class Material {
     metallic = false,
     specularColor = Colors.white(),
     specularExponent = 15,
-    shader = null } = {}) {
+    shader = null }: {
+      color?: Color;
+      metallic?: boolean;
+      specularColor?: Color;
+      specularExponent?: number;
+      shader?: Shader;
+    } = {}) {
     this.color = color1;
     this.color = color;
     this.metallic = metallic;
@@ -59,7 +67,7 @@ export class Material {
   }
   // Apply the shader's shading to this material, with the option to override
   // the shader with the material's shader (if defined).
-  public render(lights, shader, renderData) {
+   public render(lights: Light[], shader: Shader, renderData) {
     const renderShader = this.shader != null ? this.shader : shader;
     const color = renderShader.shade(lights, renderData, this);
     color.a = this.color.a;

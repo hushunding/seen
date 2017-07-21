@@ -35,9 +35,9 @@ export let Util = {
   // the id of an element, which we return.
   element: (elementOrString: string | HTMLElement) => {
     if (typeof elementOrString === 'string') {
-      return document.getElementById(elementOrString);
+      return document.getElementById(elementOrString) as HTMLElement;
     } else {
-      return elementOrString;
+      return elementOrString as HTMLElement;
     }
   },
 };

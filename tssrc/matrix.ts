@@ -88,21 +88,21 @@ export class Matrix {
     return this;
   }
   // Apply a rotation about the X axis. `Theta` is measured in Radians
-  public rotx(theta) {
+  public rotx(theta: number) {
     const ct = Math.cos(theta);
     const st = Math.sin(theta);
     const rm = [1, 0, 0, 0, 0, ct, -st, 0, 0, st, ct, 0, 0, 0, 0, 1];
     return this.matrix(rm);
   }
   // Apply a rotation about the Y axis. `Theta` is measured in Radians
-  public roty(theta) {
+  public roty(theta: number) {
     const ct = Math.cos(theta);
     const st = Math.sin(theta);
     const rm = [ct, 0, st, 0, 0, 1, 0, 0, -st, 0, ct, 0, 0, 0, 0, 1];
     return this.matrix(rm);
   }
   // Apply a rotation about the Z axis. `Theta` is measured in Radians
-  public rotz(theta) {
+  public rotz(theta: number) {
     const ct = Math.cos(theta);
     const st = Math.sin(theta);
     const rm = [ct, -st, 0, 0, st, ct, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1];

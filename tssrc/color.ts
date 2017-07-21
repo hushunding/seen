@@ -2,6 +2,9 @@
 // ------------------
 
 // `Color` objects store RGB and Alpha values from 0 to 255.
+import { Shape } from "./surface";
+import { Material } from "./materials";
+
 export class Color {
   constructor(public r = 0, public g = 0, public b = 0, public a = 0xFF) { }
   // Returns a new `Color` object with the same rgb and alpha values as the current object
@@ -134,17 +137,16 @@ export let Colors = {
       return new Color(r * 255, g * 255, b * 255, a * 255);
     }
   },
-  /*
+  
   // Generates a new random color for each surface of the supplied `Shape`.
-  randomSurfaces: (shape, sat = 0.5, lit = 0.4) => {
+  randomSurfaces: (shape: Shape, sat = 0.5, lit = 0.4) => {
     for (const surface of shape.surfaces) {
       surface.fill(Colors.hsl(Math.random(), sat, lit));
     }
-    return undefined;
   },
   // Generates a random hue then randomly drifts the hue for each surface of
   // the supplied `Shape`.
-  randomSurfaces2: (shape, drift = 0.03, sat = 0.5, lit = 0.4) => {
+  randomSurfaces2: (shape: Shape, drift = 0.03, sat = 0.5, lit = 0.4) => {
     let hue = Math.random();
     for (const surface of shape.surfaces) {
       hue += (Math.random() - 0.5) * drift;
@@ -155,10 +157,9 @@ export let Colors = {
   },
   // Generates a random color then sets the fill for every surface of the
   // supplied `Shape`.
-  randomShape: (shape, sat = 0.5, lit = 0.4) => {
-    return shape.fill(new Material(Colors.hsl(Math.random(), sat, lit)));
+  randomShape: (shape: Shape, sat = 0.5, lit = 0.4) => {
+    shape.fill(new Material(Colors.hsl(Math.random(), sat, lit)));
   },
-  */
   // A few `Color`s are supplied for convenience.
   black: () => Colors.hex('#000000'),
   white: () => Colors.hex('#FFFFFF'),
