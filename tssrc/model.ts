@@ -10,12 +10,12 @@
 
 import { Colors } from "./color";
 import { P } from "./Point";
-import { Transformable } from './transformable';
 import { Shape } from './surface';
 import { Light, Lights } from "./light";
+import { Matrix } from "./matrix";
 
-type ChildType = Shape | Model | Light;
-export class Model extends Transformable {
+export type ChildType = Shape | Model | Light;
+export class Model extends Matrix {
   public lights: Light[];
   public children: Array<Shape | Model>;
   public constructor() {
@@ -80,7 +80,7 @@ export class Model extends Transformable {
     this._eachRenderable(lightFn, shapeFn, [], this);
   }
   // tslint:disable-next-line:ban-types
-  public _eachRenderable(lightFn: Function, shapeFn: Function, lightModels: Light[], transform: Transformable) {
+  public _eachRenderable(lightFn: Function, shapeFn: Function, lightModels: Light[], transform: Matrix) {
     if (this.lights.length > 0) {
       lightModels = lightModels.slice();
     }
@@ -88,14 +88,14 @@ export class Model extends Transformable {
       if (!light.enabled) {
         continue;
       }
-      lightModels.push(lightFn.call(this, light, light.copy().transform(transform)));
+      lightModels.push(lightFn.call(this, light, light.copy().multiply(transform)));
     }
     for (const child of this.children) {
       if (child instanceof Shape) {
-        shapeFn.call(this, child, lightModels, child.copy().transform(transform));
+        shapeFn.call(this, child, lightModels, child.copy().multiply(transform));
       }
       if (child instanceof Model) {
-        child._eachRenderable(lightFn, shapeFn, lightModels, child.copy().transform(transform));
+        child._eachRenderable(lightFn, shapeFn, lightModels, child.copy().multiply(transform));
       }
     }
   }

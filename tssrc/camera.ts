@@ -5,7 +5,6 @@
 // These projection methods return a 3D to 2D `Matrix` transformation.
 // Each projection assumes the camera is located at (0,0,0).
 import { M, Matrix } from "./matrix";
-import { Transformable } from "./transformable";
 
 export let Projections = {
   // Creates a perspective projection matrix
@@ -115,7 +114,7 @@ export let Viewports = {
 //
 // These three steps allow us to easily create shapes whose coordinates match up to
 // screen coordinates in the z = 0 plane.
-export class Camera extends Transformable {
+export class Camera extends Matrix {
   public projection: Matrix;
 
   constructor({ projection = Projections.perspective() } = {}) {

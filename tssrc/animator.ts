@@ -24,7 +24,7 @@ const DEFAULT_FRAME_DELAY = 30; // msec
 
 // The animator class is useful for creating an animation loop. We supply pre
 // and post events for apply animation changes between frames.
-class Animator {
+export class Animator {
   private _lastTimestamp: number;
   private _msecDelay: number;
   private _timestamp: number;

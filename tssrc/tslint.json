@@ -14,7 +14,9 @@
           "max-line-length":[
               
           ],
-          "variable-name":[false]
+          "variable-name":[false],
+          "no-console":[false
+          ]
     },
     "rulesDirectory": []
 }

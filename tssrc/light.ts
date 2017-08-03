@@ -2,12 +2,12 @@
 // ------------------
 
 // This model object holds the attributes and transformation of a light source.
-import { Transformable } from "./transformable";
 import { Colors, Color } from "./color";
 import { P, Point } from "./Point";
 import { Util } from "./util";
+import { Matrix } from "./matrix";
 
-export class Light extends Transformable {
+export class Light extends Matrix {
   public colorIntensity: Color;
   public enabled: boolean;
   public normal: Point;

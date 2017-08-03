@@ -6,9 +6,10 @@
 // library does not support shapes with holes.
 import { Point } from "./Point";
 import { C, Colors, Color } from "./color";
-import { Transformable } from "./transformable";
 import { Util } from "./util";
 import { Material } from "./materials";
+import { Painters } from "./render/painters";
+import { Matrix } from "./matrix";
 
 export class Surface {
   public id: string;
@@ -21,7 +22,7 @@ export class Surface {
   public fillMaterial = new Material(Colors.gray());
   public strokeMaterial =  new Material(Colors.black());
 
-  constructor(public points: Point, public painter = Painters.path) {
+  constructor(public points: Point[], public painter = Painters.path) {
     // We store a unique id for every surface so we can look them up quickly
     // with the `renderModel` cache.
     this.id = 's' + Util.uniqueId();
@@ -38,7 +39,7 @@ export class Surface {
 // A `Shape` contains a collection of surface. They may create a closed 3D
 // shape, but not necessarily. For example, a cube is a closed shape, but a
 // patch is not.
-export class Shape extends Transformable {
+export class Shape extends Matrix {
   public constructor(public type: string, public surfaces: Surface[]) {
     super();
   }

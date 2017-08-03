@@ -7,7 +7,6 @@ import { Camera, Viewports, Viewport } from "./camera";
 import { Matrix } from "./matrix";
 import { Shaders, Shader } from "./shaders";
 import { Light } from "./light";
-import { Transformable } from "./transformable";
 import { Shape, Surface } from "./surface";
 
 export class Scene {
@@ -86,11 +85,11 @@ export class Scene {
 
     const renderModels = any[];
     this.model.eachRenderable(
-      (light: Light, transform: Transformable) => {
+      (light: Light, transform: Matrix) => {
         // Compute light model data.
         new LightRenderModel(light, transform)
       },
-      (shape: Shape, lights: Light[], transform: Transformable) => {
+      (shape: Shape, lights: Light[], transform: Matrix) => {
         for (const surface of shape.surfaces) {
           // Compute transformed and projected geometry.
           const renderModel = this._renderSurface(surface, transform, projection, viewport);
@@ -119,7 +118,7 @@ export class Scene {
   }
   // Get or create the rendermodel for the given surface. If `this.cache` is true, we cache these models
   // to reduce object creation and recomputation.
-  public _renderSurface(surface: Surface, transform: Transformable, projection, viewport: Viewport) {
+  public _renderSurface(surface: Surface, transform: Matrix, projection, viewport: Viewport) {
     if (!this.cache) {
       return new RenderModel(surface, transform, projection, viewport);
     }
