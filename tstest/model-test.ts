@@ -1,15 +1,17 @@
-seen     = require '../../dist/latest/seen'
-{assert} = require 'chai'
+import { assert } from 'chai';
+import 'mocha';
+import * as seen  from "../tssrc/index";
+let model,child,shape,light
 
-describe 'model tests', ->
-  it 'can create a model', ->
+describe( 'model tests', ()=>{
+  it ('can create a model', ()=>{
     model = new seen.Model()
-
-  it 'can create a default model', ->
+  })
+  it ('can create a default model', ()=>{
     model = seen.Models.default()
     assert.equal(3, model.lights.length)
-
-  it 'can add and remove a sub model', ->
+  })
+  it ('can add and remove a sub model', ()=>{
     model = new seen.Model()
     assert.equal(0, model.children.length)
 
@@ -19,8 +21,8 @@ describe 'model tests', ->
 
     model.remove(child)
     assert.equal(0, model.children.length)
-
-  it 'can add and remove a shape', ->
+   }) 
+  it ('can add and remove a shape', ()=>{
     model = new seen.Model()
     assert.equal(0, model.children.length)
 
@@ -29,8 +31,8 @@ describe 'model tests', ->
     assert.equal(1, model.children.length)
     model.remove(shape)
     assert.equal(0, model.children.length)
-
-  it 'can add and remove a light', ->
+})
+  it ('can add and remove a light', ()=>{
     model = new seen.Model()
     assert.equal(0, model.lights.length)
 
@@ -39,3 +41,5 @@ describe 'model tests', ->
     assert.equal(1, model.lights.length)
     model.remove(light)
     assert.equal(0, model.lights.length)
+    })
+})

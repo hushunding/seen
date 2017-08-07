@@ -3,7 +3,7 @@
 //
 // Attribution: adapted from http://glprogramming.com/codedump/godecho/quaternion.html
 import { P, Points, Point } from "./Point";
-import { M } from "./matrix";
+import { M , Matrix} from "./matrix";
 
 export class Quaternion {
   private q: Point;

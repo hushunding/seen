@@ -4,6 +4,7 @@
 // Polyfill requestAnimationFrame
 import { Events, OnDispatcher, Events$Dispatcher } from "./events";
 import { Util } from "./util";
+import { RenderContext } from "./render/context";
 
 // tslint:disable-next-line:interface-name
 interface Window {
@@ -118,7 +119,7 @@ export class Animator {
 }
 // A Animator for rendering the Context
 export class RenderAnimator extends Animator {
-  constructor(context) {
+  constructor(context: RenderContext) {
     super();
     this.onFrame(context.render);
   }
@@ -139,7 +140,6 @@ class Transition {
       this.firstFrame();
       this.startT = t;
     }
-
 
     // Execute a tick and draw a frame
     this.t = t;

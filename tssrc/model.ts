@@ -13,6 +13,7 @@ import { P } from "./Point";
 import { Shape } from './surface';
 import { Light, Lights } from "./light";
 import { Matrix } from "./matrix";
+import { LightRenderModel } from "./render/model";
 
 export type ChildType = Shape | Model | Light;
 export class Model extends Matrix {
@@ -80,7 +81,7 @@ export class Model extends Matrix {
     this._eachRenderable(lightFn, shapeFn, [], this);
   }
   // tslint:disable-next-line:ban-types
-  public _eachRenderable(lightFn: Function, shapeFn: Function, lightModels: Light[], transform: Matrix) {
+  public _eachRenderable(lightFn: Function, shapeFn: Function, lightModels: LightRenderModel[], transform: Matrix) {
     if (this.lights.length > 0) {
       lightModels = lightModels.slice();
     }

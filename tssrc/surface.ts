@@ -8,8 +8,9 @@ import { Point } from "./Point";
 import { C, Colors, Color } from "./color";
 import { Util } from "./util";
 import { Material } from "./materials";
-import { Painters } from "./render/painters";
+import { Painters, PathPainter } from "./render/painters";
 import { Matrix } from "./matrix";
+import { ITextStlyle, IDrawStlyle } from "./render/styler";
 
 export class Surface {
   public id: string;
@@ -18,9 +19,12 @@ export class Surface {
   public cullBackfaces = true;
 
   // Fill and stroke may be `Material` objects, which define the color and
-  // finish of the object and are rendered using the scene's shader.
+  // finish of the object and are rendered using the scene's s  dirty: any;
+  public dirty: boolean;
+  public text: string;
   public fillMaterial = new Material(Colors.gray());
   public strokeMaterial =  new Material(Colors.black());
+  public style: ITextStlyle & IDrawStlyle;
 
   constructor(public points: Point[], public painter = Painters.path) {
     // We store a unique id for every surface so we can look them up quickly

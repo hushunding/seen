@@ -5,13 +5,14 @@ import { Points, Point } from "./Point";
 import { Light } from "./light";
 import { Material } from "./materials";
 import { Color } from "./color";
+import { RenderModel, LightRenderModel, IRenderData } from "./render/model";
 
 const EYE_NORMAL = Points.Z();
 
 // These shading functions compute the shading for a surface. To reduce code
 // duplication, we aggregate them in a utils object.
 export let ShaderUtils = {
-  applyDiffuse: (c: Color, light: Light, lightNormal: Point, surfaceNormal: Point, material: Material) => {
+  applyDiffuse: (c: Color, light: LightRenderModel, lightNormal: Point, surfaceNormal: Point, material: Material) => {
     const dot = lightNormal.dot(surfaceNormal);
 
     if (dot > 0) {
@@ -19,7 +20,7 @@ export let ShaderUtils = {
       c.addChannels(light.colorIntensity.copy().scale(dot));
     }
   },
-  applyDiffuseAndSpecular: (c: Color, light: Light, lightNormal: Point, surfaceNormal: Point, material: Material) => {
+  applyDiffuseAndSpecular: (c: Color, light: LightRenderModel, lightNormal: Point, surfaceNormal: Point, material: Material) => {
     const dot = lightNormal.dot(surfaceNormal);
 
     if (dot > 0) {
@@ -33,7 +34,7 @@ export let ShaderUtils = {
     const specularColor = material.specularColor.copy().scale(specularIntensity * light.intensity / 255.0);
     c.addChannels(specularColor);
   },
-  applyAmbient: (c: Color, light: Light) => {
+  applyAmbient: (c: Color, light: LightRenderModel) => {
     // Apply ambient shading
     c.addChannels(light.colorIntensity);
   },
@@ -46,14 +47,14 @@ export abstract class Shader {
   // `lights` is an object containing the ambient, point, and directional light sources.
   // `renderModel` is an instance of `RenderModel` and contains the transformed and projected surface data.
   // `material` is an instance of `Material` and contains the color and other attributes for determining how light reflects off the surface.
- public abstract shade(lights: Light[], renderModel: RenderModel, material: Material): Color; // Override this
+ public abstract shade(lights: LightRenderModel[], renderModel: IRenderData, material: Material): Color; // Override this
 }
 // The `Phong` shader implements the Phong shading model with a diffuse,
 // specular, and ambient term.
 //
 // See https://en.wikipedia.org/wiki/Phong_reflection_model for more information
 export class Phong extends Shader {
-  public shade(lights: Light[], renderModel: RenderModel, material: Material): Color {
+  public shade(lights: LightRenderModel[], renderModel: IRenderData, material: Material): Color {
     const c = new Color();
     for (const light of lights) {
       switch (light.type) {
@@ -82,7 +83,7 @@ export class Phong extends Shader {
 // The `DiffusePhong` shader implements the Phong shading model with a diffuse
 // and ambient term (no specular).
 export class DiffusePhong extends Shader {
-  public shade(lights: Light[], renderModel: RenderModel, material: Material): Color {
+  public shade(lights: LightRenderModel[], renderModel: IRenderData, material: Material): Color {
     const c = new Color();
 
     for (const light of lights) {
@@ -105,7 +106,7 @@ export class DiffusePhong extends Shader {
 }
 // The `Ambient` shader colors surfaces from ambient light only.
 export class Ambient extends Shader {
-  public shade(lights: Light[], renderModel: RenderModel, material: Material): Color {
+  public shade(lights: LightRenderModel[], renderModel: IRenderData, material: Material): Color {
     const c = new Color();
 
     for (const light of lights) {
@@ -122,7 +123,7 @@ export class Ambient extends Shader {
 // The `Flat` shader colors surfaces with the material color, disregarding all
 // light sources.
 export class Flat extends Shader {
-  public shade(lights: Light[], renderModel: RenderModel, material: Material): Color {
+  public shade(lights: LightRenderModel[], renderModel: IRenderData, material: Material): Color {
     return material.color;
   }
 }

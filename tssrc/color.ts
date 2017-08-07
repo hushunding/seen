@@ -137,7 +137,6 @@ export let Colors = {
       return new Color(r * 255, g * 255, b * 255, a * 255);
     }
   },
-  
   // Generates a new random color for each surface of the supplied `Shape`.
   randomSurfaces: (shape: Shape, sat = 0.5, lit = 0.4) => {
     for (const surface of shape.surfaces) {

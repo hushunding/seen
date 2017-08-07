@@ -6,22 +6,26 @@
 import { RenderAnimator } from "../animator";
 import { Util } from "../util";
 import { CanvasRenderContext } from "./canvas";
+import { Point } from "../Point";
+import { RenderLayer, SceneLayer } from "./layers";
+import { IDrawStlyle, IFillStlyle, ITextStlyle } from "./styler";
+import { Scene } from "../scene";
 
 export interface IRenderContextLayer {
-
-  context: RenderContext;
+  layer: RenderLayer;
+  context: RenderContext | IRenderLayerContext;
 }
-export class RenderContext {
+export abstract class RenderContext {
   public layers: IRenderContextLayer[];
   constructor() {
-    this.layers = []
+    this.layers = [];
   }
   public render() {
-    this.reset()
+    this.reset();
     for (const layer of this.layers) {
-      layer.context.reset()
-      layer.layer.render(layer.context)
-      layer.context.cleanup()
+      layer.context.reset();
+      layer.layer.render(layer.context);
+      layer.context.cleanup();
     }
     this.cleanup();
     return this;
@@ -34,35 +38,55 @@ export class RenderContext {
 
   // Add a new `RenderLayerContext` to this context. This allows us to easily stack paintable components such as
   // a fill backdrop, or even multiple scenes in one context.
-  public layer(layer) {
+  public layer(layer: RenderLayer) {
     this.layers.push({
-      layer: layer,
-      context: this
+      layer,
+      context: this,
     });
     return this;
   }
 
-  public sceneLayer(scene) {
+  public sceneLayer(scene: Scene) {
     this.layer(new SceneLayer(scene));
     return this;
   }
 
+  // tslint:disable-next-line:no-empty
   public reset() {}
+  // tslint:disable-next-line:no-empty
   public cleanup() {}
 }
-// The `RenderLayerContext` defines the interface for producing painters that can paint various things into the current layer.
-export class RenderLayerContext {
-  public path() {} // Return a path painter
-  public rect() {} // Return a rect painter
-  public circle() {} // Return a circle painter
-  public text() {} // Return a text painter
 
-  public reset() {}
-  public cleanup() {}
+export interface IRenderContextStyler {
+  draw(style: IDrawStlyle): IRenderContextStyler;
+  fill(style: IFillStlyle): IRenderContextStyler;
+}
+export interface IpathPainter {
+  path(points: Point[]): IpathPainter  & IRenderContextStyler;
+}
+export interface IrectPainter {
+  rect(width: number, height: number): IrectPainter & IRenderContextStyler;
+}
+export interface IcirclePainter {
+  circle(center: Point, radius: number): IcirclePainter & IRenderContextStyler;
+}
+export interface ItextPainter {
+  fillText(m: number[], text: string, style: ITextStlyle): ItextPainter;
+}
+
+// The `RenderLayerContext` defines the interface for producing painters that can paint various things into the current layer.
+export interface IRenderLayerContext {
+  path(): (IpathPainter & IRenderContextStyler); // Return a path painter
+  rect(): (IrectPainter & IRenderContextStyler); // Return a rect painter
+  circle(): (IcirclePainter & IRenderContextStyler); // Return a circle painter
+  text(): ItextPainter; // Return a text painter
+
+  reset(): void;
+  cleanup(): void;
 }
 // Create a render context for the element with the specified `elementId`. elementId
 // should correspond to either an SVG or Canvas element.
-export let Context = (elementId: string, scene = null) {
+export let Context = (elementId: string, scene: Scene = null) => {
   const ref = Util.element(elementId);
   const tag = ref != null ? ref.tagName.toUpperCase() : "";
   let context: (CanvasRenderContext|null) = null;

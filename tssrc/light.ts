@@ -38,14 +38,14 @@ export class Light extends Matrix {
     this.id = Util.uniqueId('l');
   }
   public render() {
-    this.colorIntensity = this.color.copy().scale(this.intensity)
+    this.colorIntensity = this.color.copy().scale(this.intensity);
   }
 }
 export let Lights = {
   // A point light emits light eminating in all directions from a single point.
   // The `point` property determines the location of the point light. Note,
   // though, that it may also be moved through the transformation of the light.
-  point: (opts: {}) => new Light('point', opts),
+  point: (opts = {}) => new Light('point', opts),
 
   // A directional lights emit light in parallel lines, not eminating from any
   // single point. For these lights, only the `normal` property is used to

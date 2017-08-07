@@ -6,6 +6,9 @@
 import { P, Point } from "../Point";
 import { Shape, Surface } from "../surface";
 import { Quaternion } from "../quaternion";
+import { Affine } from "../affine";
+import { Painters } from "../render/painters";
+import { ObjParser } from "./obj";
 
 const TETRAHEDRON_COORDINATE_MAP = [
   [0, 2, 1],
@@ -220,7 +223,7 @@ export let Shapes = {
           column.push(pts);
         }
     }
-      if (x % 2 !== 0){
+      if (x % 2 !== 0) {
         for (const p of column[0]){
           p.y += ny;
         }
@@ -231,12 +234,11 @@ export let Shapes = {
     return new Shape('patch', surfaces.map((s) => new Surface(s)));
   },
   // Return a text surface that can render 3D text using an affine transform estimate of the projection
-  text : (text, surfaceOptions = {}) => {
+  text : (text: string, surfaceOptions = {}) => {
     const surface = new Surface(Affine.ORTHONORMAL_BASIS(), Painters.text);
     surface.text = text;
-    for (key in surfaceOptions) {
-        surface[key] = surfaceOptions[key];
-      }
+    surface.style = surfaceOptions;
+
     return new Shape('text', [surface]);
   },
   // Returns a shape that is an extrusion of the supplied points into the z axis.
@@ -316,4 +318,14 @@ export let Shapes = {
     }
     return newTriangles;
   },
+  // This method accepts Wavefront .obj file content and returns a `Shape` object.
+  obj : (objContents: string, cullBackfaces = true) => {
+  const parser = new ObjParser();
+  parser.parse(objContents);
+  return new Shape('obj', parser.mapFacePoints((points: Point[]) => {
+    const surface = new Surface(points);
+    surface.cullBackfaces = cullBackfaces;
+    return surface;
+  }));
+},
 };

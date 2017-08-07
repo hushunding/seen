@@ -18,7 +18,6 @@ export class Transformable {
   public m: Matrix;
 
   constructor() {
-    this.m = new Matrix();
     this.baked = IDENTITY;
   }
   // Returns a new matrix instances with a copy of the value array

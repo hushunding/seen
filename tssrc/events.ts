@@ -26,6 +26,7 @@ export let Events = {
 // Note that only one listener with the name event name and id can be
 // registered at once. If you to generate unique ids, you can use the
 // Util.uniqueId() method.
+// tslint:disable-next-line:ban-types
 type listenerType = Function;
 export type OnDispatcher = (type: string, listener: any) => Events$Dispatcher;
 interface IEventOn {
@@ -52,7 +53,7 @@ export class Events$Dispatcher {
 
 const Events$Event = function() {
   const listenerMap = new Map<string, listenerType>();
-  const on = (name: string, listener: Function) => {
+  const on = (name: string, listener: listenerType) => {
     if (listener != null) {
       listenerMap.set(name, listener);
     } else {

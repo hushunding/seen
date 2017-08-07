@@ -3,6 +3,7 @@
 // Note: Wavefront .obj array indicies are 1-based.
 import { P, Point } from "../Point";
 import { Shape, Surface } from "../surface";
+import { Shapes } from "./primitives";
 
 export class ObjParser {
   public faces: number[][];
@@ -43,13 +44,3 @@ export class ObjParser {
       face.map((v: number) => P(...this.vertices[v - 1]))));
   }
 }
-// This method accepts Wavefront .obj file content and returns a `Shape` object.
-Shapes.obj = (objContents: string, cullBackfaces = true) => {
-  const parser = new ObjParser();
-  parser.parse(objContents);
-  return new Shape('obj', parser.mapFacePoints((points: Point[]) => {
-    const surface = new Surface(points);
-    surface.cullBackfaces = cullBackfaces;
-    return surface;
-  }));
-};

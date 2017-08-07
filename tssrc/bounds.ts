@@ -1,7 +1,7 @@
 // The `Bounds` object contains an axis-aligned bounding box.
 import { Point, P } from "./Point";
 
-class Bounds {
+export class Bounds {
   public min: Point | null;
   public max: Point | null;
   public static points(points: Point[]) {

@@ -6,6 +6,7 @@
 import { Color, Colors } from "./color";
 import { Shader } from "./shaders";
 import { Light } from "./light";
+import { IRenderData, LightRenderModel } from "./render/model";
 
 export class Material {
   public shader: Shader;
@@ -67,7 +68,7 @@ export class Material {
   }
   // Apply the shader's shading to this material, with the option to override
   // the shader with the material's shader (if defined).
-   public render(lights: Light[], shader: Shader, renderData) {
+   public render(lights: LightRenderModel[], shader: Shader, renderData: IRenderData) {
     const renderShader = this.shader != null ? this.shader : shader;
     const color = renderShader.shade(lights, renderData, this);
     color.a = this.color.a;
