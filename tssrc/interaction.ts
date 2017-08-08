@@ -218,7 +218,7 @@ export class Drag extends Events$Dispatcher {
     }
     this._dragState.last = page;
   }
-  private _onInertia() {
+  private _onInertia = () => {
     if (!this._inertiaRunning) {
       return;
     }
@@ -240,12 +240,12 @@ export class Drag extends Events$Dispatcher {
 
     this._startInertia();
   }
-  private _startInertia() {
+  private _startInertia = () => {
     this._inertiaRunning = true;
     setTimeout(this._onInertia, InertialMouse.inertiaMsecDelay);
   }
 
-  private _stopInertia() {
+  private _stopInertia = () => {
     this._dragState.inertia.reset();
     this._inertiaRunning = false;
   }

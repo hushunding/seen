@@ -188,7 +188,7 @@ class TransitionAnimator extends Animator {
   // not done, we re-enqueue them at the front. If all transitions are
   // complete, we will start animating the next set of transitions from the
   // keyframe queue on the next update.
-  public update(t: number) {
+  public update = (t: number) => {
     if (this.queue.length === 0) {
       return;
     }
