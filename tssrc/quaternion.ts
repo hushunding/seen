@@ -2,7 +2,7 @@
 // more natural mouse rotations.
 //
 // Attribution: adapted from http://glprogramming.com/codedump/godecho/quaternion.html
-import { P, Points, Point } from "./Point";
+import { P, Points, Point } from "./point";
 import { M , Matrix} from "./matrix";
 
 export class Quaternion {

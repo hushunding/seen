@@ -9,11 +9,7 @@ export let Events = {
   // argument list. The returned `Dispatcher` will have methods with the names
   // of the event types.
   dispatch: (...args: string[]) => {
-    const dispatch = new Events$Dispatcher();
-    for (const arg of args) {
-      dispatch[arg] = Events$Event();
-    }
-    return dispatch;
+    return new Events$Dispatcher(...args);
   },
 };
 
@@ -27,13 +23,26 @@ export let Events = {
 // registered at once. If you to generate unique ids, you can use the
 // Util.uniqueId() method.
 // tslint:disable-next-line:ban-types
-type listenerType = Function;
+export type listenerType = Function;
 export type OnDispatcher = (type: string, listener: any) => Events$Dispatcher;
-interface IEventOn {
+export interface IEventOn {
    on(name: string, listener: listenerType): listenerType;
 }
+export type EventFunc = (...args: any[]) => void ;
+export interface IEvent extends EventFunc {
+  on: (name: string, listener: listenerType) => void;
+  listenerMap: Map<string, listenerType>;
+}
+
 export class Events$Dispatcher {
-  [key: string]: any;
+  public evnetMap: Map<string, IEvent>;
+  constructor(...args: string[]) {
+    this.evnetMap = new Map<string, IEvent>();
+    for (const arg of args)
+    {
+      this.evnetMap.set(arg, Events$Event());
+    }
+  }
   public on(type: string, listener: any) {
     const i = type.indexOf('.');
     let name = '';
@@ -41,10 +50,13 @@ export class Events$Dispatcher {
       name = type.substring(i + 1);
       type = type.substring(0, i);
     }
-    if (this[type] != null) {
-      this[type].on(name, listener);
+    if (this.evnetMap.has(type)) {
+      this.evnetMap.get(type).on(name, listener);
     }
     return this;
+  }
+  public disp(type: string) {
+    return this.evnetMap.get(type);
   }
 }
 // Internal event object for storing listener callbacks and a map for easy
@@ -60,12 +72,12 @@ const Events$Event = function() {
       listenerMap.delete(name);
     }
   };
-  const event = (...args: any[]) => {
+  const event: IEvent = ((...args: any[]) => {
     for ( const [name, l] of listenerMap)
     {
       l.apply(this, args);
     }
-  };
+  }) as IEvent;
   event.on  = on;
   event.listenerMap = listenerMap;
   return event;

@@ -3,7 +3,7 @@
 // ------------------
 
 // Map to points in the surfaces of a tetrahedron
-import { P, Point } from "../Point";
+import { P, Point } from "../point";
 import { Shape, Surface } from "../surface";
 import { Quaternion } from "../quaternion";
 

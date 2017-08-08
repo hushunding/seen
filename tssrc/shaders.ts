@@ -1,7 +1,7 @@
 // ## Shaders
 // ------------------
 
-import { Points, Point } from "./Point";
+import { Points, Point } from "./point";
 import { Light } from "./light";
 import { Material } from "./materials";
 import { Color } from "./color";

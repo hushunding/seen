@@ -18,42 +18,36 @@ export let WindowEvents = (() => {
   );
 
   if (typeof window !== "undefined" && window !== null) {
-    window.addEventListener('mouseup', dispatch.mouseUp, true);
-    window.addEventListener('mousedown', dispatch.mouseDown, true);
-    window.addEventListener('mousemove', dispatch.mouseMove, true);
-    window.addEventListener('touchstart', dispatch.touchStart, true);
-    window.addEventListener('touchmove', dispatch.touchMove, true);
-    window.addEventListener('touchend', dispatch.touchEnd, true);
-    window.addEventListener('touchcancel', dispatch.touchCancel, true);
+    window.addEventListener('mouseup', dispatch.disp('mouseUp') , true);
+    window.addEventListener('mousedown', dispatch.disp('mouseDown'), true);
+    window.addEventListener('mousemove', dispatch.disp('mouseMove'), true);
+    window.addEventListener('touchstart', dispatch.disp('touchStart'), true);
+    window.addEventListener('touchmove', dispatch.disp('touchMove'), true);
+    window.addEventListener('touchend', dispatch.disp('touchEnd'), true);
+    window.addEventListener('touchcancel', dispatch.disp('touchCancel'), true);
   }
-  return { on: dispatch.on };
+  return dispatch;
 })();
 
 // An event dispatcher for mouse and drag events on a single dom element. The
 // available events are `'dragStart', 'drag', 'dragEnd', 'mouseMove',
 // 'mouseDown', 'mouseUp', 'mouseWheel'`
-export class MouseEvents {
-  public on: OnDispatcher;
+export class MouseEvents extends Events$Dispatcher {
   public el: HTMLElement;
   private _mouseDown: boolean;
-  public dispatch: Events$Dispatcher;
   private _uid: string;
   constructor(el: string | HTMLElement, options = {}) {
     // Util.defaults(this., options, this.defaults)
-
-    this.el = Util.element(el);
-
-    this._uid = Util.uniqueId('mouser-');
-
-    this.dispatch = Events.dispatch(
-      'dragStart',
+    super(  'dragStart',
       'drag',
       'dragEnd',
       'mouseMove',
       'mouseDown',
       'mouseUp',
       'mouseWheel');
-    this.on = this.dispatch.on;
+    this.el = Util.element(el);
+
+    this._uid = Util.uniqueId('mouser-');
 
     this._mouseDown = false;
     this.attach();
@@ -70,36 +64,36 @@ export class MouseEvents {
     this.el.removeEventListener('mousedown', this._onMouseDown);
     this.el.removeEventListener('mousewheel', this._onMouseWheel);
   }
-  private _onMouseMove(e: MouseEvent & TouchEvent) {
-    this.dispatch.mouseMove(e);
+  private _onMouseMove = (e: MouseEvent & TouchEvent) => {
+    this.disp('mouseMove')(e);
     e.preventDefault();
     e.stopPropagation();
     if (this._mouseDown) {
-      this.dispatch.drag(e);
+      this.disp('drag')(e);
     }
   }
-  private _onMouseDown(e: MouseEvent & TouchEvent) {
+  private _onMouseDown = (e: MouseEvent & TouchEvent) => {
     this._mouseDown = true;
     WindowEvents.on(`mouseUp.${this._uid}`, this._onMouseUp);
     WindowEvents.on(`mouseMove.${this._uid}`, this._onMouseMove);
     WindowEvents.on(`touchEnd.${this._uid}`, this._onMouseUp);
     WindowEvents.on(`touchCancel.${this._uid}`, this._onMouseUp);
     WindowEvents.on(`touchMove.${this._uid}`, this._onMouseMove);
-    this.dispatch.mouseDown(e);
-    this.dispatch.dragStart(e);
+    this.disp('mouseDown')(e);
+    this.disp('dragStart')(e);
   }
-  private _onMouseUp(e: MouseEvent & TouchEvent) {
+  private _onMouseUp = (e: MouseEvent & TouchEvent) => {
     this._mouseDown = false;
     WindowEvents.on(`mouseUp.${this._uid}`, null);
     WindowEvents.on(`mouseMove.${this._uid}`, null);
     WindowEvents.on(`touchEnd.${this._uid}`, null);
     WindowEvents.on(`touchCancel.${this._uid}`, null);
     WindowEvents.on(`touchMove.${this._uid}`, null);
-    this.dispatch.mouseUp(e);
-    this.dispatch.dragEnd(e);
+    this.disp('mouseUp')(e);
+    this.disp('dragEnd')(e);
   }
-  private _onMouseWheel(e: MouseEvent & TouchEvent) {
-    this.dispatch.mouseWheel(e);
+  private _onMouseWheel = (e: MouseEvent & TouchEvent) => {
+    this.disp('mouseWheel')(e);
   }
 }
 // A export class for computing mouse interia for interial scrolling
@@ -149,16 +143,19 @@ export class InertialMouse {
 // as the user is dragging their mouse. This is the easiest way to add mouse-
 // look or mouse-rotate to a scene.
 interface IdragState { dragging: boolean; origin: number[]; last: number[]; inertia: InertialMouse; }
-export class Drag {
-  public on: OnDispatcher;
-  public dispatch: Events$Dispatcher;
-  private _dragState: IdragState;
+export interface IdragEvent {
+      offset: number[];
+      offsetRelative: number[];
+    }
+export class Drag extends Events$Dispatcher {
+    private _dragState: IdragState;
   private _inertiaRunning: boolean;
   private _uid: string;
   public el: HTMLElement;
   public inertia = false;
 
   public constructor(el: string | HTMLElement, { inertia = false }) {
+    super('drag', 'dragStart', 'dragEnd', 'dragEndInertia');
     this.inertia = inertia;
     this.el = Util.element(el);
     this._uid = Util.uniqueId('dragger-');
@@ -171,15 +168,12 @@ export class Drag {
       inertia: new InertialMouse(),
     };
 
-    this.dispatch = Events.dispatch('drag', 'dragStart', 'dragEnd', 'dragEndInertia');
-    this.on = this.dispatch.on;
-
     const mouser = new MouseEvents(this.el);
     mouser.on(`dragStart.${this._uid}`, this._onDragStart);
     mouser.on(`dragEnd.${this._uid}`, this._onDragEnd);
     mouser.on(`drag.${this._uid}`, this._onDrag);
   }
-  private _getPageCoords(e: MouseEvent & TouchEvent) {
+  private _getPageCoords = (e: MouseEvent & TouchEvent) => {
     if (e.touches != null && e.touches.length > 0) {
       return [e.touches[0].pageX, e.touches[0].pageY];
     } else if (e.changedTouches != null && e.changedTouches.length > 0) {
@@ -188,14 +182,14 @@ export class Drag {
       return [e.pageX, e.pageY];
     }
   }
-  private _onDragStart(e: MouseEvent & TouchEvent) {
+  private _onDragStart = (e: MouseEvent & TouchEvent) => {
     this._stopInertia();
     this._dragState.dragging = true;
     this._dragState.origin = this._getPageCoords(e);
     this._dragState.last = this._getPageCoords(e);
-    this.dispatch.dragStart(e);
+    this.disp('dragStart')(e);
   }
-  private _onDragEnd(e: MouseEvent & TouchEvent) {
+  private _onDragEnd = (e: MouseEvent & TouchEvent) => {
     this._dragState.dragging = false;
 
     if (this.inertia) {
@@ -207,17 +201,17 @@ export class Drag {
       this._dragState.inertia.update(dragEvent.offsetRelative);
       this._startInertia();
 
-      this.dispatch.dragEnd(e);
+      this.disp('dragEnd')(e);
     }
   }
-  private _onDrag(e: MouseEvent & TouchEvent) {
+  private _onDrag = (e: MouseEvent & TouchEvent) => {
     const page = this._getPageCoords(e);
 
     const dragEvent = {
       offset: [page[0] - this._dragState.origin[0], page[1] - this._dragState.origin[1]],
       offsetRelative: [page[0] - this._dragState.last[0], page[1] - this._dragState.last[1]],
     };
-    this.dispatch.drag(dragEvent);
+    this.disp('drag')(dragEvent);
 
     if (this.inertia) {
       this._dragState.inertia.update(dragEvent.offsetRelative);
@@ -234,11 +228,11 @@ export class Drag {
 
     if (Math.abs(intertia[0]) < 1 && Math.abs(intertia[1]) < 1) {
       this._stopInertia();
-      this.dispatch.dragEndInertia();
+      this.disp('dragEndInertia')();
       return;
     }
 
-    this.dispatch.drag({
+    this.disp('drag')({
       offset: [this._dragState.last[0] - this._dragState.origin[0], this._dragState.last[0] - this._dragState.origin[1]],
       offsetRelative: intertia,
     });
@@ -258,24 +252,21 @@ export class Drag {
 }
 // Adds simple mouse wheel eventing to a DOM element. A 'zoom' event is emitted
 // as the user is scrolls their mouse wheel.
-export class Zoom {
+export class Zoom extends Events$Dispatcher {
   public speed = 0.25;
-  public on: OnDispatcher;
-  public dispatch: Events$Dispatcher;
   private _uid: string;
   public el: HTMLElement;
 
   constructor(el: string | HTMLElement, { speed = 0.25 }) {
+    super('zoom');
     this.speed = speed;
     this.el = Util.element(el);
     this._uid = Util.uniqueId('zoomer-');
-    this.dispatch = Events.dispatch('zoom');
-    this.on = this.dispatch.on;
 
     const mouser = new MouseEvents(this.el);
     mouser.on(`mouseWheel.${this._uid}`, this._onMouseWheel);
   }
-  private _onMouseWheel(e: MouseWheelEvent) {
+  private _onMouseWheel = (e: MouseWheelEvent) => {
     // This prevents the page from scrolling when we mousewheel the element
     e.preventDefault();
 
@@ -283,6 +274,6 @@ export class Zoom {
     const zoomFactor = Math.abs(e.wheelDelta) / 120 * this.speed;
     const zoom = Math.pow(2, sign * zoomFactor);
 
-    this.dispatch.zoom({ zoom });
+    this.disp('zoom')({ zoom });
   }
 }

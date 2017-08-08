@@ -1,7 +1,7 @@
 // Parser for Wavefront .obj files
 //
 // Note: Wavefront .obj array indicies are 1-based.
-import { P, Point } from "../Point";
+import { P, Point } from "../point";
 import { Shape, Surface } from "../surface";
 
 export class ObjParser {

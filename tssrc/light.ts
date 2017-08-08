@@ -3,7 +3,7 @@
 
 // This model object holds the attributes and transformation of a light source.
 import { Colors, Color } from "./color";
-import { P, Point } from "./Point";
+import { P, Point } from "./point";
 import { Util } from "./util";
 import { Matrix } from "./matrix";
 

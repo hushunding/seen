@@ -3,3 +3,5 @@ node_modules
 *.log
 site-dist
 tsdist
+tssite/built
+tssite/js

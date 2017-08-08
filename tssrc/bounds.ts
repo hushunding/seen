@@ -1,5 +1,5 @@
 // The `Bounds` object contains an axis-aligned bounding box.
-import { Point, P } from "./Point";
+import { Point, P } from "./point";
 
 export class Bounds {
   public min: Point | null;

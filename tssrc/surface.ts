@@ -4,7 +4,7 @@
 // A `Surface` is a defined as a planar object in 3D space. These paths don't
 // necessarily need to be convex, but they should be non-degenerate. This
 // library does not support shapes with holes.
-import { Point } from "./Point";
+import { Point } from "./point";
 import { C, Colors, Color } from "./color";
 import { Util } from "./util";
 import { Material } from "./materials";
@@ -30,6 +30,7 @@ export class Surface {
     // We store a unique id for every surface so we can look them up quickly
     // with the `renderModel` cache.
     this.id = 's' + Util.uniqueId();
+    this.style = {};
   }
   public fill(fill: Material | Color) {
     this.fillMaterial = Material.create(fill);

@@ -25,7 +25,7 @@ const DEFAULT_FRAME_DELAY = 30; // msec
 
 // The animator class is useful for creating an animation loop. We supply pre
 // and post events for apply animation changes between frames.
-export class Animator {
+export class Animator extends Events$Dispatcher {
   private _lastTimestamp: number;
   private _msecDelay: number;
   private _timestamp: number;
@@ -33,12 +33,11 @@ export class Animator {
   private _lastTime: number;
   public frameDelay: number;
   public timestamp: number;
-  public on: OnDispatcher;
-  public dispatch: Events$Dispatcher;
+
   private _running: boolean;
   public constructor() {
-    this.dispatch = Events.dispatch('beforeFrame', 'afterFrame', 'frame');
-    this.on = this.dispatch.on;
+    super('beforeFrame', 'afterFrame', 'frame');
+
     this.timestamp = 0;
     this._running = false;
     this._msecDelay = 0;
@@ -83,7 +82,7 @@ export class Animator {
   }
   // The main animation frame method
 
-  public frame(t: number) {
+  public frame = (t: number) => {
     if (!this._running) {
       return;
     }
@@ -92,9 +91,9 @@ export class Animator {
     this._timestamp = t != null ? t : (this._timestamp + (this._msecDelay !== 0 ? this._msecDelay : DEFAULT_FRAME_DELAY));
     const deltaTimestamp = this._lastTimestamp !== 0 ? this._timestamp - this._lastTimestamp : this._timestamp;
 
-    this.dispatch.beforeFrame(this._timestamp, deltaTimestamp);
-    this.dispatch.frame(this._timestamp, deltaTimestamp);
-    this.dispatch.afterFrame(this._timestamp, deltaTimestamp);
+    this.disp('beforeFrame')(this._timestamp, deltaTimestamp);
+    this.disp('frame')(this._timestamp, deltaTimestamp);
+    this.disp('afterFrame')(this._timestamp, deltaTimestamp);
 
     this._lastTimestamp = this._timestamp;
 

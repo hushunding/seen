@@ -27,11 +27,11 @@ export class PathPainter extends Painter {
       painter.draw({
         'fill'           : 'none',
         'stroke'         : renderModel.stroke.hex(),
-        'stroke-width' :  renderModel.surface.style['stroke-width'] != null ? renderModel.surface.style['stroke-width'] : 1,
+        'stroke-width' :  renderModel.surface.style ['stroke-width'] != null ? renderModel.surface.style['stroke-width'] : 1,
       });
     }
 }
-  }
+}
 export class TextPainter extends Painter {
   public paint(renderModel: RenderModel, context: IRenderLayerContext) {
     const style = {

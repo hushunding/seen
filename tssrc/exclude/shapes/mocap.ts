@@ -1,7 +1,7 @@
 
 import { Animator } from "../animator";
 import { Shapes } from "./primitives";
-import { P, Point } from "../Point";
+import { P, Point } from "../point";
 import { Model } from "../model";
 import { M, Matrix } from "../matrix";
 import { BvhParser } from "../ext/bvh-parser";

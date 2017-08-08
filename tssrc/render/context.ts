@@ -6,7 +6,7 @@
 import { RenderAnimator } from "../animator";
 import { Util } from "../util";
 import { CanvasRenderContext } from "./canvas";
-import { Point } from "../Point";
+import { Point } from "../point";
 import { RenderLayer, SceneLayer } from "./layers";
 import { IDrawStlyle, IFillStlyle, ITextStlyle } from "./styler";
 import { Scene } from "../scene";
@@ -89,7 +89,7 @@ export interface IRenderLayerContext {
 export let Context = (elementId: string, scene: Scene = null) => {
   const ref = Util.element(elementId);
   const tag = ref != null ? ref.tagName.toUpperCase() : "";
-  let context: (CanvasRenderContext|null) = null;
+  let context: CanvasRenderContext = null;
   switch (tag) {
     case 'SVG':
     case 'G':

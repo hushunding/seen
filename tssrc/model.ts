@@ -9,7 +9,7 @@
 // chains of transformations for creating, for example, articulated skeletons.
 
 import { Colors } from "./color";
-import { P } from "./Point";
+import { P } from "./point";
 import { Shape } from './surface';
 import { Light, Lights } from "./light";
 import { Matrix } from "./matrix";

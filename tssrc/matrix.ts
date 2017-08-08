@@ -27,6 +27,7 @@ export let TRANSPOSE_INDICES =
 // when you want to preserve an object's value.
 export class Matrix {
   private baked: number[];
+  public readonly transform = this.multiply;
   // Accepts a 16-value `Array`, defaults to the identity matrix.
   constructor(public m: number[] = IDENTITY.slice()) {
     this.baked = IDENTITY;
@@ -73,7 +74,7 @@ export class Matrix {
   public multiply(b: Matrix): Matrix {
     return this.matrix(b.m);
   }
-
+  
   // Tranposes this matrix
   public transpose() {
     const c = ARRAY_POOL;

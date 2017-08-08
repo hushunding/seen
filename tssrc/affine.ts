@@ -11,7 +11,7 @@
 //
 // This fake projection will produce unrealistic results with large strings of
 // text that are not broken into their own shapes.
-import { P, Point } from "./Point";
+import { P, Point } from "./point";
 
 export let Affine = {
 

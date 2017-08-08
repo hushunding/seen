@@ -56,7 +56,7 @@ export class Scene {
     shader = Shaders.phong(),
     cullBackfaces = true,
     fractionalPoints = false,
-    cache = true }) {
+    cache = true }= {}) {
 
     this.model = model;
     this.camera = camera;

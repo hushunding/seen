@@ -1,6 +1,6 @@
 // ## HTML5 Canvas Context
 // ------------------
-import { Point } from "../Point";
+import { Point } from "../point";
 import { Util } from "../util";
 import { RenderContext, IRenderContextLayer, IRenderLayerContext, IpathPainter, IrectPainter, IcirclePainter, ItextPainter, IRenderContextStyler} from "./context";
 import { IFillStlyle, IDrawStlyle, ITextStlyle } from "./styler";

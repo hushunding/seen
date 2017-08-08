@@ -2,7 +2,7 @@
 // ------------------
 
 import { Surface } from "../surface";
-import { Points, Point, P } from "../Point";
+import { Points, Point, P } from "../point";
 import { Util } from "../util";
 import { Matrix } from "../matrix";
 import { Bounds } from "../bounds";
